@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Blog App</title>
+        <link rel="stylesheet" href="/dist/output.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="flex flex-col min-h-screen bg-gray-50">
+        <header class="bg-white shadow-lg">
+            <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a
+                            href="/"
+                            class="text-2xl font-bold text-primary hover:text-primary-dark transition duration-150 ease-in-out"
+                        >
+                            Blog App
+                        </a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a
+                            href="/"
+                            class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                            >Home</a
+                        >
+                        <a
+                            href="/api/v1/blog"
+                            class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                            >Blogs</a
+                        >
+                        <div id="user-menu" class="hidden space-x-8">
+                            <a
+                                href="/api/v1/blog/new"
+                                class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                                >New Blog</a
+                            >
+                            <button
+                                id="logout-btn"
+                                class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                        <div id="auth-menu" class="space-x-8">
+                            <a
+                                href="/api/v1/auth/signin"
+                                class="text-gray-900 hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                                >Sign In</a
+                            >
+                            <a
+                                href="/api/v1/auth/signup"
+                                class="bg-primary text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                                >Sign Up</a
+                            >
+                        </div>
+                    </div>
+                    <div class="-mr-2 flex items-center sm:hidden">
+                        <button
+                            type="button"
+                            id="menu-toggle"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+                            aria-controls="mobile-menu"
+                            aria-expanded="false"
+                        >
+                            <span class="sr-only">Open main menu</span>
+                            <svg
+                                class="block h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                            </svg>
+                            <svg
+                                class="hidden h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div class="sm:hidden hidden" id="mobile-menu">
+                <div class="pt-2 pb-3 space-y-1">
+                    <a
+                        href="/"
+                        class="text-gray-900 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                        >Home</a
+                    >
+                    <a
+                        href="/api/v1/blog"
+                        class="text-gray-900 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                        >Blogs</a
+                    >
+                    <div id="mobile-user-menu" class="hidden">
+                        <a
+                            href="/api/v1/blog/new"
+                            class="text-gray-900 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                            >New Blog</a
+                        >
+                        <button
+                            id="mobile-logout-btn"
+                            class="text-gray-900 hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                    <div id="mobile-auth-menu">
+                        <a
+                            href="/api/v1/auth/signin"
+                            class="text-gray-900 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                            >Sign In</a
+                        >
+                        <a
+                            href="/api/v1/auth/signup"
+                            class="bg-primary text-white hover:bg-primary-dark block px-3 py-2 rounded-md text-base font-medium"
+                            >Sign Up</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <% if (body === 'home') { %>
+                <%- include('home', { blogs: typeof blogs !== 'undefined' ? blogs : [] }) %>
+            <% } else if (body === 'blog/new') { %>
+                <%- include('../blog/new', { categories: categories || [] }) %>
+            <% } else { %>
+                <p>No content to display.</p>
+            <% } %>
+        </main>
+
+        <footer class="bg-white shadow-md mt-8">
+            <div
+                class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-gray-600"
+            >
+                <p>&copy; 2023 Blog App. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script>
+            document
+                .getElementById('menu-toggle')
+                .addEventListener('click', function () {
+                    document
+                        .getElementById('mobile-menu')
+                        .classList.toggle('hidden');
+                });
+
+            // Fetch user data and update UI
+            fetch('/api/v1/auth/me')
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        document
+                            .getElementById('user-menu')
+                            .classList.remove('hidden');
+                        document
+                            .getElementById('auth-menu')
+                            .classList.add('hidden');
+                        document
+                            .getElementById('mobile-user-menu')
+                            .classList.remove('hidden');
+                        document
+                            .getElementById('mobile-auth-menu')
+                            .classList.add('hidden');
+                    } else {
+                        document
+                            .getElementById('user-menu')
+                            .classList.add('hidden');
+                        document
+                            .getElementById('auth-menu')
+                            .classList.remove('hidden');
+                        document
+                            .getElementById('mobile-user-menu')
+                            .classList.add('hidden');
+                        document
+                            .getElementById('mobile-auth-menu')
+                            .classList.remove('hidden');
+                    }
+                })
+                .catch((error) => console.error('Error:', error));
+
+            // Logout functionality
+            document
+                .getElementById('logout-btn')
+                .addEventListener('click', function () {
+                    logout();
+                });
+
+            document
+                .getElementById('mobile-logout-btn')
+                .addEventListener('click', function () {
+                    logout();
+                });
+
+            function logout() {
+                fetch('/api/v1/auth/logout', { method: 'POST' })
+                    .then(() => {
+                        window.location.href = '/';
+                    })
+                    .catch((error) => console.error('Error:', error));
+            }
+        </script>
+    </body>
+</html>

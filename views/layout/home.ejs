@@ -1,0 +1,29 @@
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Latest Blogs</h1>
+    <% if (blogs && blogs.length > 0) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% blogs.forEach(function(blog) { %>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <% if (blog.image) { %>
+                        <img src="<%= blog.image %>" alt="<%= blog.title %>" class="w-full h-48 object-cover">
+                    <% } else { %>
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-500">No image</span>
+                        </div>
+                    <% } %>
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold mb-2"><%= blog.title %></h2>
+                        <p class="text-gray-600 mb-2"><%= blog.description ? blog.description.substring(0, 100) + '...' : 'No description available' %></p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">By <%= blog.author ? blog.author.username : 'Unknown' %></span>
+                            <a href="/api/v1/blog/<%= blog.slug %>" class="text-blue-500 hover:underline">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <p class="text-xl text-center text-gray-600">No blogs to display.</p>
+    <% } %>
+</div>
+
