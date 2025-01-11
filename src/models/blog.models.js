@@ -27,5 +27,3 @@ blogSchema.pre('save', function (next) {
 });
 
 export const Blog = mongoose.model('Blog', blogSchema);
-
-

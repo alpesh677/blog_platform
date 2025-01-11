@@ -210,11 +210,13 @@ const getBlogBySlug = asyncHandler(async (req, res) => {
                 $project: {
                     title: 1,
                     slug: 1,
+                    image: 1,
                     description: 1,
                     content: 1,
                     categories: { name: 1 },
                     author: { username: 1 },
                     comments: 1,
+                    createdAt: 1,
                 },
             },
         ]).hint({ slug: 1 });

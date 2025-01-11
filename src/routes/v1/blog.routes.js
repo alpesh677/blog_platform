@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/new', authMiddleware, async (req, res) => {
-    console.log("new route")
+    console.log('new route');
     try {
         const categoriesResponse = await new Promise((resolve) => {
             categoryController.getAllCategories(req, {
@@ -64,51 +64,19 @@ router.get('/new', authMiddleware, async (req, res) => {
     }
 });
 
-
-// router.get('/:slug', async (req, res) => {
-//     try {
-//         const blogResponse = await new Promise((resolve) => {
-//             blogController.getBlogBySlug(req, {
-//                 status: () => ({ json: resolve }),
-//                 json: resolve,
-//             });
-//         });
-
-//         if (!blogResponse.success) {
-//             throw new Error(blogResponse.message || 'Failed to fetch blog');
-//         }
-
-//         const blog = blogResponse.data;
-
-//         if (!blog) {
-//             return res.status(404).render('layout/main', {
-//                 body: 'error',
-//                 message: 'Blog not found',
-//                 user: req.user || null,
-//             });
-//         }
-
-//         res.render('layout/main', {
-//             body: 'blog/single',
-//             blog: blog,
-//             user: req.user || null,
-//         });
-//     } catch (error) {
-//         console.error('Error fetching blog:', error);
-//         res.status(500).render('layout/main', {
-//             body: 'error',
-//             message: 'Error loading blog: ' + error.message,
-//             user: req.user || null,
-//         });
-//     }
-// });
-
-
+//private routes
 router.post(
     '/add',
     upload.single('image'),
     authMiddleware,
-    blogController.addBlog
+    (req, res, next) => {
+        blogController.addBlog(req, res, (err) => {
+            if (err) {
+                return next(err);
+            }
+            res.redirect('/api/v1/blog');
+        });
+    }
 );
 router.put(
     '/update/:id',
@@ -116,10 +84,50 @@ router.put(
     upload.single('image'),
     blogController.addBlog
 );
+
 router.delete('/delete/:id', authMiddleware, blogController.deleteBlog);
 router.get('/all', authMiddleware, blogController.getBlogs);
 router.get('/get/:id', authMiddleware, blogController.getBlogByID);
 router.get('/category/:id', authMiddleware, blogController.getBlogByCatagories);
-router.get('/:slug', blogController.getBlogBySlug);
+// router.get('/:slug', blogController.getBlogBySlug);
+
+router.get('/:slug', async (req, res) => {
+    try {
+        const blogResponse = await new Promise((resolve, reject) => {
+            blogController.getBlogBySlug(req, {
+                status: () => ({ json: resolve }),
+                json: resolve,
+            });
+        });
+
+        if (!blogResponse.success) {
+            throw new Error(blogResponse.message || 'Failed to fetch blog');
+        }
+
+        const blog = blogResponse.data;
+        console.log('data in the blog by slug', blog);
+
+        if (!blog) {
+            return res.status(404).render('layout/main', {
+                body: 'error',
+                message: 'Blog not found',
+                user: req.user || null,
+            });
+        }
+
+        res.render('layout/main', {
+            body: 'blog/single',
+            blog: blog,
+            user: req.user || null,
+        });
+    } catch (error) {
+        console.error('Error fetching blog:', error);
+        res.status(500).render('layout/main', {
+            body: 'error',
+            message: 'Error loading blog: ' + error.message,
+            user: req.user || null,
+        });
+    }
+});
 
 export default router;

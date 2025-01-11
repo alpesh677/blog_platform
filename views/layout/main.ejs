@@ -147,10 +147,21 @@
                 <%- include('home', { blogs: typeof blogs !== 'undefined' ? blogs : [] }) %>
             <% } else if (body === 'blog/new') { %>
                 <%- include('../blog/new', { categories: categories || [] }) %>
+            <% } else if (body === 'blog/single') { %>
+                <%- include('../blog/single', { blog: blog }) %>
+            <% } else if (body === 'error') { %>
+                <div class="container mx-auto px-4 py-8">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline"><%= message %></span>
+                    </div>
+                </div>
             <% } else { %>
-                <p>No content to display.</p>
+                <div class="container mx-auto px-4 py-8">
+                    <p class="text-xl text-center text-gray-600">No content to display.</p>
+                </div>
             <% } %>
-        </main>
+    </main>
 
         <footer class="bg-white shadow-md mt-8">
             <div

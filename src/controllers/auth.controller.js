@@ -51,7 +51,11 @@ const signIn = asyncHandler(async (req, res) => {
         httpOnly: true,
         secure: true,
     });
-
+    if (user.isAdmin) {
+        res.redirect('/admin');
+    } else {
+        res.redirect('/');
+    }
     res.redirect('/');
 });
 

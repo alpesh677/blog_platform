@@ -1,0 +1,29 @@
+<%- include('../layout', { title: 'All Blogs' }) %>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            <% blogs.forEach(function(blog) { %>
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap"><%= blog.title %></td>
+                    <td class="px-6 py-4 whitespace-nowrap"><%= blog.category.name %></td>
+                    <td class="px-6 py-4"><%= blog.description.substring(0, 100) %>...</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <a href="/admin/blogs/edit/<%= blog._id %>" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</a>
+                        <form action="/admin/blogs/delete/<%= blog._id %>" method="POST" class="inline">
+                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this blog?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
