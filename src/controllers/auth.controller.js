@@ -52,11 +52,10 @@ const signIn = asyncHandler(async (req, res) => {
         secure: true,
     });
     if (user.isAdmin) {
-        res.redirect('/admin');
+        res.redirect('/api/v1/admin');
     } else {
         res.redirect('/');
     }
-    res.redirect('/');
 });
 
 const me = asyncHandler(async (req, res) => {

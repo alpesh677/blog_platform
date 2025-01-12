@@ -70,15 +70,15 @@ const deleteCategory = asyncHandler(async (req, res) => {
         validateFields(req, { params: ['id'] });
         validateIds(id);
 
-        const blogsUsingCategory = await Blog.countDocuments({ category: id });
-        if (blogsUsingCategory > 0) {
-            throw new ApiError(
-                StatusCodes.CONFLICT,
-                'Category cannot be deleted as it is linked to existing blogs'
-            );
-        }
+        // const blogsUsingCategory = await Blog.countDocuments({ category: id });
+        // if (blogsUsingCategory > 0) {
+        //     throw new ApiError(
+        //         StatusCodes.CONFLICT,
+        //         'Category cannot be deleted as it is linked to existing blogs'
+        //     );
+        // }
 
-        next();
+        // next();
         const deletedCategory = await Category.findByIdAndDelete(id);
 
         if(!deletedCategory) {
@@ -98,7 +98,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
 const getAllCategories = asyncHandler(async (req, res) => {
     try {
-        const categories = await Category.find().select('name');
+        const categories = await Category.find().select('name').lean();
         handleResponse(res, StatusCodes.OK, categories, 'Categories fetched successfully.');
     } catch (error) {
         throw new ApiError(

@@ -80,7 +80,7 @@ const updateBlog = asyncHandler(async (req, res) => {
     try {
         // Validate required ID parameter
         validateFields(req, { params: ['id'] });
-        validateIds(req.params.id);
+        // validateIds(req.params.id);
 
         // Validate optional fields in request body
         const { title, description, content, categories } = req.body;
@@ -123,16 +123,22 @@ const updateBlog = asyncHandler(async (req, res) => {
 
 const deleteBlog = asyncHandler(async (req, res) => {
     try {
+        console.log("In delete blog controller");
         // Validate required ID parameter
         validateFields(req, { params: ['id'] });
-        validateIds(req.params.id);
+        // validateIds(req.params.id);
 
         // Find the blog by ID
         const blog = await Blog.findById(req.params.id);
-        if (!blog || String(blog.author) !== String(req.user._id)) {
+        if (!blog) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Blog not found');
+        }
+
+        // Allow deletion if user is admin or is the author of the blog
+        if (!req.user.isAdmin && String(blog.author) !== String(req.user._id)) {
             throw new ApiError(
-                StatusCodes.NOT_FOUND,
-                'Blog not found or you are not the author.'
+                StatusCodes.FORBIDDEN,
+                'You are not authorized to delete this blog'
             );
         }
 
@@ -214,7 +220,7 @@ const getBlogBySlug = asyncHandler(async (req, res) => {
                     description: 1,
                     content: 1,
                     categories: { name: 1 },
-                    author: { username: 1 },
+                    author: { username: 1,_id:1 },
                     comments: 1,
                     createdAt: 1,
                 },

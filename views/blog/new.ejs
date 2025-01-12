@@ -84,6 +84,26 @@
     </form>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
 <script>
-    // You may want to add client-side validation or dynamic category loading here
+    ClassicEditor
+        .create(document.querySelector('#content'), {
+            toolbar: [
+                'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote',
+                'insertTable', 'undo', 'redo'
+            ]
+        })
+        .then(editor => {
+            // Remove required attribute from hidden textarea
+            const hiddenTextarea = document.querySelector('#content');
+            hiddenTextarea.removeAttribute('required');
+
+            // Sync CKEditor data to hidden textarea on form submit
+            document.querySelector('form').addEventListener('submit', () => {
+                hiddenTextarea.value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error('Error initializing CKEditor:', error);
+        });
 </script>

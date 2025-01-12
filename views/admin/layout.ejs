@@ -3,8 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Admin Dashboard - <%= title %></title>
+        <title>Admin Dashboard </title>
         <link rel="stylesheet" href="/dist/output.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -15,13 +16,13 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
-                        <a href="/admin" class="font-bold text-xl"
+                        <a href="/api/v1/admin" class="font-bold text-xl"
                             >Blog Admin</a
                         >
                     </div>
                     <div>
                         <a
-                            href="/admin/logout"
+                            href="/api/v1/admin/logout"
                             class="text-gray-300 hover:text-white"
                             >Sign out</a
                         >
@@ -34,38 +35,52 @@
             <aside class="w-64 bg-white h-screen">
                 <nav class="mt-5">
                     <a
-                        href="/admin/blogs"
+                        href="/api/v1/admin"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-list-ul mr-2"></i> All Blogs
                     </a>
                     <a
-                        href="/admin/blogs/new"
+                        href="/api/v1/admin/blogs/new"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-plus mr-2"></i> Add New Blog
                     </a>
                     <a
-                        href="/admin/categories"
+                        href="/api/v1/admin/categories"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-tags mr-2"></i> All Categories
                     </a>
                     <a
-                        href="/admin/categories/new"
+                        href="/api/v1/admin/categories/new"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-plus mr-2"></i> Add New Category
                     </a>
                 </nav>
             </aside>
-
+            
             <main class="flex-1 p-10">
-                <h1 class="text-3xl font-bold mb-6"><%= title %></h1>
-                <%- body %>
+                <!-- <h1 class="text-3xl font-bold mb-6"><%= title %></h1> -->
+                <% if (body === 'admin/blogs') { %>
+                    <%- include('blogs/index', { blogs: typeof blogs !== 'undefined' ? blogs : [] }) %>
+                <% }  else if (body === 'admin/blogs/delete') { %>
+                    <%- include('blogs/delete', { blog: blog }) %>
+                <% } else if (body === 'admin/categories') { %>
+                    <%- include('categories/index', { categories: categories || [] }) %>
+                <% }else if (body === 'admin/add-category') { %>
+                    <%- include('categories/new') %>
+                <% }else { %>
+                    <div class="container mx-auto px-4 py-8">
+                        <p class="text-xl text-center text-gray-600">No content to display.</p>
+                    </div>
+                <% } %>
+
             </main>
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.2/alpine.js"></script>
+        
     </body>
 </html>

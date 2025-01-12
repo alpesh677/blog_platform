@@ -145,8 +145,14 @@
         <main class="flex-grow">
             <% if (body === 'home') { %>
                 <%- include('home', { blogs: typeof blogs !== 'undefined' ? blogs : [] }) %>
-            <% } else if (body === 'blog/new') { %>
+            <% } else if (body === 'auth/signin') { %>
+                <%- include('../auth/signin') %>
+            <% } else if (body === 'auth/signup') { %>
+                <%- include('../auth/signup') %>
+            <% }else if (body === 'blog/new') { %>
                 <%- include('../blog/new', { categories: categories || [] }) %>
+            <% }else if (body === 'blog/edit') { %>
+                <%- include('../blog/edit',{ blog: blog || null, categories: categories || [] }) %>
             <% } else if (body === 'blog/single') { %>
                 <%- include('../blog/single', { blog: blog }) %>
             <% } else if (body === 'error') { %>
@@ -161,7 +167,7 @@
                     <p class="text-xl text-center text-gray-600">No content to display.</p>
                 </div>
             <% } %>
-    </main>
+        </main>
 
         <footer class="bg-white shadow-md mt-8">
             <div
