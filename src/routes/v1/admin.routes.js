@@ -70,6 +70,7 @@ router.get('/categories', async (req, res) => {
         });
     });
 
+    console.log('Categories fetched:', categoriesResponse.data);
     if (!categoriesResponse.success) {
         throw new Error(
             categoriesResponse.message || 'Failed to fetch categories'
@@ -145,7 +146,62 @@ router.post('/categories/add', async (req, res) => {
     }
 });
 
+router.get('/categories/edit/:id', async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        const categoriesResponse = await new Promise((resolve) => {
+            categoryController.getCategoryById(
+                { ...req, params: { id: categoryId } },
+                {
+                    status: () => ({ json: resolve }),
+                    json: resolve,
+                }
+            );
+        });
 
+        if (!categoriesResponse.success) {
+            throw new Error(
+                categoriesResponse.message || 'Failed to fetch category'
+            );
+        }
 
+        res.render('admin/layout', {
+            title: 'Edit Category',
+            category: categoriesResponse.data,
+            body: 'admin/edit-category',
+        });
+    } catch (error) {
+        console.error('Error fetching category:', error);
+        res.status(500).render('admin/layout', {
+            title: 'Error',
+            body: 'admin/error',
+            error: 'Failed to fetch category',
+        });
+    }
+});
+
+router.put('/categories/update/:id', async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        await new Promise((resolve, reject) => {
+            categoryController.updateCategory(
+                { ...req, params: { id: categoryId } },
+                {
+                    status: () => ({ json: resolve }),
+                    json: resolve,
+                }
+            );
+        });
+
+        res.redirect('/api/v1/admin/categories');
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).render('admin/layout', {
+            title: 'Error',
+            body: 'admin/error',
+            error: 'Failed to update category',
+        });
+    }
+});
 
 export default router;

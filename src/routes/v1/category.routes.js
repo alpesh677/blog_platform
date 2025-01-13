@@ -13,6 +13,7 @@ router.post('/add', categoryController.addCategory);
 router.put('/update/:id', categoryController.updateCategory);
 router.delete('/delete/:id', categoryController.deleteCategory);
 router.get('/all', categoryController.getAllCategories);
+router.get('/get/:id', categoryController.getCategoryById);
 router.get('/search', categoryController.searchCategories);
 
 export default router;

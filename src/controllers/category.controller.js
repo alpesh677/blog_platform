@@ -134,12 +134,25 @@ const searchCategories = asyncHandler(async (req, res) => {
     }
 });
 
+const getCategoryById = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+        validateFields(req, { params: ['id'] });
+        validateIds(id);
+        const category = await Category.findById(id);
+        handleResponse(res, StatusCodes.OK, category, 'Category fetched successfully.');
+    } catch (error) {
+        handleInternalServerError(error, 'Failed to fetch category');
+    }
+});
+
 const categoryController = {
     addCategory,
     updateCategory,
     deleteCategory,
     getAllCategories,
     searchCategories,
+    getCategoryById
 };
 
 export default categoryController;

@@ -41,7 +41,7 @@
                         <i class="fas fa-list-ul mr-2"></i> All Blogs
                     </a>
                     <a
-                        href="/api/v1/admin/blogs/new"
+                        href="/api/v1/blog/new"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-plus mr-2"></i> Add New Blog
@@ -53,7 +53,7 @@
                         <i class="fas fa-tags mr-2"></i> All Categories
                     </a>
                     <a
-                        href="/api/v1/admin/categories/new"
+                        href="/api/v1/admin/categories/add"
                         class="block px-4 py-2 text-gray-600 hover:bg-gray-200"
                     >
                         <i class="fas fa-plus mr-2"></i> Add New Category
@@ -71,7 +71,10 @@
                     <%- include('categories/index', { categories: categories || [] }) %>
                 <% }else if (body === 'admin/add-category') { %>
                     <%- include('categories/new') %>
-                <% }else { %>
+                <% } else if (body === 'admin/edit-category') { %>
+                    <%- include('categories/edit-category') %>
+                <% }
+                else { %>
                     <div class="container mx-auto px-4 py-8">
                         <p class="text-xl text-center text-gray-600">No content to display.</p>
                     </div>
