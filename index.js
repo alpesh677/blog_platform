@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import expressEjsLayouts from 'express-ejs-layouts';
 import methodOverride from 'method-override';
+import {blogController} from "./src/controllers/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,11 +18,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
-
-app.use((req, res, next) => {
-    console.log(`HTTP Method: ${req.method} | Path: ${req.path}`);
-    next();
-});
 
 app.use(expressEjsLayouts);
 app.set('layout', 'layout/main'); // Set default layout
@@ -67,8 +63,31 @@ async function startServer() {
     //     next();
     // });
 
-    app.get('/', (req, res) => {
-        res.render('layout/main', { body: 'home' });
+    app.get('/', async (req, res) => {
+        try {
+        const blogs = await new Promise((resolve, reject) => {
+            const fakeRes = {
+                status: () => fakeRes,
+                json: (data) => {
+                    if (data.success) {
+                        resolve(data.data);
+                    } else {
+                        reject(new Error(data.message));
+                    }
+                },
+            };
+
+            blogController.getLatestBlogs(req, fakeRes);
+        });
+
+        res.render('layout/main', {
+            body: 'home',
+            blogs: blogs || [],
+            user: req.user || null,
+        });
+    } catch (error) {
+        console.error('Error fetching blogs:', error);
+    }
     });
     
     app.use('/api', router);
